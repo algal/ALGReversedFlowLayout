@@ -20,10 +20,10 @@ This should require only iOS6 or higher. (But I have only tested in iOS7.)
 
 There are two ways to use the library in your project:
 
-1) Manually add the library files to your project
+1) Manually add the library files to your project:
 
-ALGReversedFlowLayout.h
-ALGReversedFlowLayout.m
+   ALGReversedFlowLayout.h
+   ALGReversedFlowLayout.m
 
 2) Using CocoaPods
 
