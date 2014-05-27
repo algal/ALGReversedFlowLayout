@@ -3,7 +3,7 @@
 //  ReversedCollectionView
 //
 //  Created by Alexis Gallagher on 2014-05-21.
-//  Copyright (c) 2014 Bloom FIlter. All rights reserved.
+//  Copyright (c) 2014 Alexis Gallagher. All rights reserved.
 //
 
 #import "ALGReversedFlowLayout.h"
@@ -49,7 +49,7 @@
   if (self.expandContentSizeToBounds) {
     /* 
      We ensure the declared contentSize is at least as tall as the bounds.
-     Otherwise, the collectionView -- by virtue of being a scrollview -- places
+     Otherwise, the collectionView --by virtue of being a scrollview-- places
      it at the top of the bounds.
      */
     CGSize const cvContentSize = [super collectionViewContentSize];
