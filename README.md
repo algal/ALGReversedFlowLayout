@@ -22,8 +22,8 @@ There are two ways to use the library in your project:
 
 1) Manually add the library files to your project:
 
-   ALGReversedFlowLayout.h
-   ALGReversedFlowLayout.m
+    ALGReversedFlowLayout.h
+    ALGReversedFlowLayout.m
 
 2) Using CocoaPods
 
