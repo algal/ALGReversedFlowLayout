@@ -20,7 +20,9 @@
 
 
 /**
- Expand the collectionViewContentSize to fit the collectionView.bounds. Default is YES.
+ Expand the collectionViewContentSize to fit the collectionView.bounds. Default is YES. 
+ This will ensure that layout starts from the bottom even when you have manually set the
+ bounds of the collection to a height larger than needed for its elements.
  
  @discussion
  
@@ -44,9 +46,13 @@
 
 
 /**
- Defines a minimum permiited collectionViewContentSize.height.
+ Defines a minimum permiited collectionViewContentSize.height. If non-nil, the 
+ layout will expand the content area to at least this height.
  
- If non-nil, the layout will expand the content area to at least this height.
+ Set this value if you want to ensure that the scrollable content area of the 
+ collection view always has at least a certain height, even a height which may be
+ larger than the collection view's bounds.
+ 
  */
 @property (strong,nonatomic) NSNumber * minimumContentSizeHeight;
 
