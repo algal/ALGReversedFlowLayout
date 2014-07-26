@@ -8,7 +8,7 @@
 
 ## Usage
 
-To run the example project, just do `pod try https://github.com/algal/ALGReversedFlowLayout.git`. Run the example project in the simulator with a 4" device. Play with the switches in the example project to compare it to the normal flow layout, and to see the effect of the one configurable property `expandsContentSizeToBounds`.
+To run the example project, just do `pod try https://github.com/algal/ALGReversedFlowLayout.git`. Run the example project in the simulator with a 4" device. Play with the switches in the example project to compare it to the normal flow layout, and to see the effect of the two configurable properties `expandsContentSizeToBounds` and `minimumContentSizeHeight`.
 
 To use it in your app, just programatically instatiate this class exactly as you would `UICollectionViewFlowLayout`. Or if you are creating your layout in Interface Builder, then select the layout object in your storyboard or nib and use the Identity Inspector to set the class `ALGReversedFlowLayout` instead of `UICollectionViewFlowLayout`.
 
