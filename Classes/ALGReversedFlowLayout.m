@@ -8,7 +8,8 @@
 
 #import "ALGReversedFlowLayout.h"
 
-
+@interface ALGReversedFlowLayout ()
+@end
 
 @implementation ALGReversedFlowLayout
 
@@ -17,20 +18,22 @@
 
 - (instancetype) initWithCoder:(NSCoder *)coder
 {
-    self = [super initWithCoder:coder];
-    if (self) {
-      self->_expandContentSizeToBounds = YES;
-    }
-    return self;
+  self = [super initWithCoder:coder];
+  if (self) {
+    self->_expandContentSizeToBounds = YES;
+    self->_minimumContentSizeHeight = nil;
+  }
+  return self;
 }
 
 - (instancetype) init
 {
-    self = [super init];
-    if (self) {
-      self->_expandContentSizeToBounds = YES;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    self->_expandContentSizeToBounds = YES;
+    self->_minimumContentSizeHeight = nil;
+  }
+  return self;
 }
 
 - (BOOL) shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
@@ -46,22 +49,17 @@
 
 - (CGSize) collectionViewContentSize
 {
+  CGSize expandedSize = [super collectionViewContentSize];
+  
   if (self.expandContentSizeToBounds) {
-    /* 
-     We ensure the declared contentSize is at least as tall as the bounds.
-     Otherwise, the collectionView --by virtue of being a scrollview-- places
-     it at the top of the bounds.
-     */
-    CGSize const cvContentSize = [super collectionViewContentSize];
-    CGSize const cvBounds = [[self collectionView] bounds].size;
-    
-    CGFloat const width = cvContentSize.width;
-    CGFloat const height = MAX(cvContentSize.height, cvBounds.height);
-    return CGSizeMake(width,height);
+    expandedSize.height = MAX(expandedSize.height, [[self collectionView] bounds].size.height);
   }
-  else {
-    return [super collectionViewContentSize];
+
+  if (self.minimumContentSizeHeight) {
+    expandedSize.height = MAX(expandedSize.height, [self.minimumContentSizeHeight floatValue]);
   }
+
+  return expandedSize;
 }
 
 - (UICollectionViewLayoutAttributes *) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath

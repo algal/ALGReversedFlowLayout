@@ -10,49 +10,56 @@
 
 #import "ALGReversedFlowLayout.h"
 
+static CGFloat const kSmallHeight = 150.f;
+static CGFloat const kMediumHeight = 250.f;
+static CGFloat const kBigHeight = 350.f;
+
+
 @interface ALGViewController ()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @property (weak, nonatomic) IBOutlet UISwitch *expandsContentSizeSwitch;
 @property (strong,nonatomic) NSMutableArray * items;
-
-
 @end
 
 @implementation ALGViewController
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
-    self = [super initWithCoder:coder];
-    if (self) {
-      
-      self->_items = [NSMutableArray array];
-      for (NSUInteger i=0; i < 10; ++i) {
-        NSString * string = [NSString stringWithFormat:@"%@",@(i)];
-        [self->_items addObject:string];
-      }
-      
+  self = [super initWithCoder:coder];
+  if (self) {
+    self->_items = [NSMutableArray array];
+    for (NSUInteger i=0; i < 6; ++i) {
+      NSString * string = [NSString stringWithFormat:@"%@",@(i)];
+      [self->_items addObject:string];
     }
-    return self;
+  }
+  return self;
 }
+
+#pragma mark action methods
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
   [self setUsesNormalFlowLayout:NO];
-  [self setCollectionViewBoundsBiggerThanContentSize:YES];
+  [self setCollectionViewBoundsBigHeight:YES];
 }
 
 - (IBAction) toggleUsesNormalFlowLayout:(UISwitch *)sender {
   [self setUsesNormalFlowLayout:sender.on];
 }
 
-- (IBAction)toggleExpandsContentSize:(UISwitch *)sender {
+- (IBAction) toggleExpandsContentSize:(UISwitch *)sender {
   [self setExpandsContentSize:sender.on];
 }
 
-- (IBAction)toggleCVSize:(UISwitch*)sender {
-  [self setCollectionViewBoundsBiggerThanContentSize:sender.on];
+- (IBAction) toggleEnforcesMinimumHeight:(UISwitch *)sender {
+  [self setCollectionViewContentSizeMinimumHeight:sender.on];
+}
+
+- (IBAction) toggleCVSize:(UISwitch *)sender {
+  [self setCollectionViewBoundsBigHeight:sender.on];
 }
 
 #pragma mark helpers
@@ -68,6 +75,15 @@
   return layout;
 }
 
+- (void) setUsesNormalFlowLayout:(BOOL)enabled
+{
+  UICollectionViewLayout * newLayout = [self flowLayoutNormal:enabled];
+  [self.collectionView setCollectionViewLayout:newLayout animated:YES];
+  [newLayout invalidateLayout];
+  
+  [self normalizeExpandsContentSizeSwitch];
+}
+
 - (void) setExpandsContentSize:(BOOL)expandsContentSize
 {
   UICollectionViewLayout  * layout = self.collectionView.collectionViewLayout;
@@ -81,26 +97,10 @@
   [self normalizeExpandsContentSizeSwitch];
 }
 
-- (void) setUsesNormalFlowLayout:(BOOL)enabled {
-  UICollectionViewLayout * newLayout = [self flowLayoutNormal:enabled];
-  [self.collectionView setCollectionViewLayout:newLayout animated:YES];
-  [newLayout invalidateLayout];
-  
-  [self normalizeExpandsContentSizeSwitch];
-}
-
-- (void) normalizeExpandsContentSizeSwitch
+- (void) setCollectionViewBoundsBigHeight:(BOOL)useBigHeight
 {
-  UICollectionViewLayout * layout = self.collectionView.collectionViewLayout;
-  if ([layout isKindOfClass:[ALGReversedFlowLayout class]]) {
-    ALGReversedFlowLayout * reversedLayout = ( ALGReversedFlowLayout *) layout;
-    self.expandsContentSizeSwitch.on = reversedLayout.expandContentSizeToBounds;
-  }
-}
-
-- (void)setCollectionViewBoundsBiggerThanContentSize:(BOOL)useBigHeight {
-  CGFloat bigHeight = 350.f;
-  CGFloat smallheight = 150.f;
+  CGFloat bigHeight = kBigHeight;
+  CGFloat smallheight = kSmallHeight;
   
   self.collectionView.frame = CGRectMake(self.collectionView.frame.origin.x,
                                          self.collectionView.frame.origin.y,
@@ -109,6 +109,36 @@
   [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+- (void) setCollectionViewContentSizeMinimumHeight:(BOOL)useMediumHeight
+{
+  CGFloat const mediumHeight = kMediumHeight;
+
+  UICollectionViewFlowLayout * layout = (ALGReversedFlowLayout *) self.collectionView.collectionViewLayout;
+
+  if ([layout isKindOfClass:[ALGReversedFlowLayout class]]) {
+    ALGReversedFlowLayout * reversedLayout = (ALGReversedFlowLayout *) layout;
+    if (useMediumHeight)
+    {
+      NSNumber * const myNumber = [NSNumber numberWithFloat:mediumHeight];
+      reversedLayout.minimumContentSizeHeight = myNumber;
+    }
+    else
+    {
+      reversedLayout.minimumContentSizeHeight = nil;
+    }
+    [reversedLayout invalidateLayout];
+  }
+}
+
+- (void) normalizeExpandsContentSizeSwitch
+{
+  UICollectionViewLayout * layout = self.collectionView.collectionViewLayout;
+  if ([layout isKindOfClass:[ALGReversedFlowLayout class]]) {
+    ALGReversedFlowLayout * reversedLayout = (ALGReversedFlowLayout *) layout;
+    self.expandsContentSizeSwitch.on = reversedLayout.expandContentSizeToBounds;
+    [self setCollectionViewContentSizeMinimumHeight:(reversedLayout.minimumContentSizeHeight ? YES : NO)];
+  }
+}
 
 #pragma mark UICollectionViewDelegate
 
