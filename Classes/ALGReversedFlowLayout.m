@@ -64,7 +64,7 @@
 
 - (UICollectionViewLayoutAttributes *) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  UICollectionViewLayoutAttributes * attribute = [super layoutAttributesForItemAtIndexPath:indexPath];
+  UICollectionViewLayoutAttributes * attribute = [[super layoutAttributesForItemAtIndexPath:indexPath] copy];
   [self modifyLayoutAttribute:attribute];
   return attribute;
 }
@@ -73,10 +73,13 @@
 {
   CGRect const normalRect = [self normalRectForReversedRect:reversedRect];
   NSArray * attributes = [super layoutAttributesForElementsInRect:normalRect];
+  NSMutableArray *result = [NSMutableArray arrayWithCapacity:attributes.count];
   for(UICollectionViewLayoutAttributes *attribute in attributes){
-    [self modifyLayoutAttribute:attribute];
+    UICollectionViewLayoutAttributes *attr = [attribute copy];
+    [self modifyLayoutAttribute:attr];
+    [result addObject:attr];
   }
-  return attributes;
+  return result;
 }
 
 - (void) setScrollDirection:(UICollectionViewScrollDirection)scrollDirection
